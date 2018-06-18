@@ -1,17 +1,12 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 import * as courseActions from "../../actions/courseActions";
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        courses: state.courses
-    };
-};
-
 interface ICoursesPage {
-    dispatch: (x: any) => {},
-    courses: Array<any>
+    actions: any;
+    courses: Array<any>;
 }
 
 class CoursesPage extends React.Component<ICoursesPage> {
@@ -29,6 +24,10 @@ class CoursesPage extends React.Component<ICoursesPage> {
         self.onClickSave = self.onClickSave.bind(self);
     }
 
+    public componentDidMount() {
+        this.props.actions.loadCourses();
+    }
+
     public onTitleChange(event) {
         const course = this.state.course;
         course.title = event.target.value;
@@ -36,7 +35,7 @@ class CoursesPage extends React.Component<ICoursesPage> {
     }
 
     public onClickSave() {
-        this.props.dispatch(courseActions.createCourseSuccess(this.state.course));
+        this.props.actions.createCourseSuccess(this.state.course);
     }
 
     public courseRow(course, index) {
@@ -59,4 +58,19 @@ class CoursesPage extends React.Component<ICoursesPage> {
     }
 }
 
-export default connect(mapStateToProps)(CoursesPage);
+const mapStateToProps = (state, ownProps) => {
+    return {
+        courses: state.courses
+    };
+};
+
+const mapDispachToProps = dispatch => {
+    return {
+        actions: bindActionCreators(courseActions, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispachToProps
+)(CoursesPage);
