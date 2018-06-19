@@ -1,8 +1,13 @@
+// React
 import * as React from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
+// Utils
 import * as courseActions from "../../actions/courseActions";
+
+// Components
+import CourseList from './courseList';
 
 interface ICoursesPage {
     actions: any;
@@ -44,11 +49,12 @@ class CoursesPage extends React.Component<ICoursesPage> {
 
     render() {
         const self = this;
+        const { courses } = this.props;
 
         return (
             <div>
                 <h1>Courses</h1>
-                {this.props.courses.map(this.courseRow)}
+                <CourseList courses={courses} />
                 <h2>Add Course</h2>
                 <input type="text" value={self.state.course.title} onChange={self.onTitleChange} />
 

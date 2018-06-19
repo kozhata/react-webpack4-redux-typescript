@@ -1,4 +1,5 @@
-import delay from "./delay";
+import { of, Observable } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 
 // This file mocks a web API by working with the hard-coded data below.
 // It uses setTimeout to simulate the delay of an AJAX call.
@@ -27,12 +28,8 @@ const generateId = author => {
 };
 
 class AuthorApi {
-    static getAllAuthors() {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(Object.assign([], authors));
-            }, delay);
-        });
+   static getAllAuthors(): Observable<any> {
+        return of(Object.assign([], authors)).pipe(debounceTime(15000));
     }
 
     static saveAuthor(author) {
@@ -61,7 +58,7 @@ class AuthorApi {
                 }
 
                 resolve(author);
-            }, delay);
+            }, 15000);
         });
     }
 
@@ -73,7 +70,7 @@ class AuthorApi {
                 });
                 authors.splice(indexOfAuthorToDelete, 1);
                 resolve();
-            }, delay);
+            }, 15000);
         });
     }
 }

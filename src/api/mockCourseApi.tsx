@@ -1,6 +1,6 @@
 import delay from "./delay";
 
-import { of, pipe, Observable } from "rxjs";
+import { of, Observable } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
 // This file mocks a web API by working with the hard-coded data below.
