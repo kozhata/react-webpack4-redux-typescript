@@ -8,21 +8,19 @@ import AuthorsSelectInput from "./authorsSelectInput";
 const CourseForm = (props: ICourseForm) => {
     let errors: any = {};
     let { course, onSave, onChange, saving } = props;
-    const onChangeLocal = event => {
 
+    const onChangeLocal = event => {
         onChange(event);
     }
 
     const courseFormIsValid = () => {
-        let formIsValid = true;
-        let errors = {};
+        let formIsValid = true;        
 
         if (this.state.course.title.length < 5) {
             errors['title'] = "Title must be at least 5 characters.";
             formIsValid = false;
         }
 
-        this.setState({ errors: errors });
         return formIsValid;
     }
     
@@ -33,7 +31,7 @@ const CourseForm = (props: ICourseForm) => {
 
             <AuthorsSelectInput
                 value={course.authorId}
-                onChange={onChange}
+                onChange={onChangeLocal}
                 error={errors.authorId}
             />
 
@@ -41,16 +39,16 @@ const CourseForm = (props: ICourseForm) => {
                 name="category"
                 label="Category"
                 value={course.category}
-                onChange={onChange}
+                onChange={onChangeLocal}
                 error={errors.category}
             />
 
-            <TextInput name="length" label="Length" value={course.length} onChange={onChange} error={errors.length} />
+            <TextInput name="length" label="Length" value={course.length} onChange={onChangeLocal} error={errors.length} />
 
             <input
                 type="submit"
-                disabled={saving}
-                value={saving ? "Saving..." : "Save"}
+                //disabled={saving}
+                //value={saving ? "Saving..." : "Save"}
                 className="btn btn-primary"
                 onClick={onSave}
             />

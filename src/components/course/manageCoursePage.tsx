@@ -22,8 +22,8 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
             saving: false
         };
 
-        // this.updateCourseState = this.updateCourseState.bind(this);
-        // this.saveCourse = this.saveCourse.bind(this);
+        this.updateCourseState = this.updateCourseState.bind(this);
+        this.saveCourse = this.saveCourse.bind(this);
     }
 
     // componentWillReceiveProps(nextProps) {
@@ -33,43 +33,38 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
     //     }
     // }
 
-    // updateCourseState(event) {
-    //     const field = event.target.name;
-    //     let course = Object.assign({}, this.state.course);
-    //     course[field] = event.target.value;
-    //     return this.setState({ course: course });
-    // }
+    updateCourseState(event) {
+        const field = event.target.name;
+        let course = Object.assign({}, this.state.course);
+        course[field] = event.target.value;
+        return this.setState({ course: course });
+    }
 
-    // courseFormIsValid() {
-    //     let formIsValid = true;
-    //     let errors = {};
+    courseFormIsValid() {
+        let formIsValid = true;
+        let errors = {};
 
-    //     if (this.state.course.title.length < 5) {
-    //         errors.title = "Title must be at least 5 characters.";
-    //         formIsValid = false;
-    //     }
+        if (this.state.course.title.length < 5) {
+            errors['title'] = "Title must be at least 5 characters.";
+            formIsValid = false;
+        }
 
-    //     this.setState({ errors: errors });
-    //     return formIsValid;
-    // }
+        this.setState({ errors: errors });
+        return formIsValid;
+    }
 
-    // saveCourse(event) {
-    //     event.preventDefault();
+    saveCourse(event) {
+        event.preventDefault();        
 
-    //     if (!this.courseFormIsValid()) {
-    //         return;
-    //     }
+        this.setState({ saving: true });
 
-    //     this.setState({ saving: true });
-
-    //     this.props.actions
-    //         .saveCourse(this.state.course)
-    //         .then(() => this.redirect())
-    //         .catch(error => {
-    //             toastr.error(error);
-    //             this.setState({ saving: false });
-    //         });
-    // }
+        this.props.actions
+            .saveCourse(this.state.course)
+            .then(() => this.redirect())
+            .catch(error => {
+                this.setState({ saving: false });
+            });
+    }
 
     redirect() {
         this.setState({ saving: false });
@@ -81,8 +76,8 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
 
         return (
             <CourseForm
-                //onChange={this.updateCourseState}
-                //onSave={this.saveCourse}
+                onChange={self.updateCourseState}
+                onSave={self.saveCourse}
                 course={self.state.course}
                 saving={self.state.saving}
             />
@@ -98,6 +93,7 @@ interface IManageCoursePageState {
 
 interface IManageCoursePageProps {
     course: any;
+    actions: any;
 }
 
 const getCourseById = (courses, id) => {

@@ -10,7 +10,7 @@ import * as courseActions from "../../actions/courseActions";
 import CourseList from './courseList';
 
 interface ICoursesPage {
-    actions: any;
+    loadCourses: any;
     courses: Array<any>;
 }
 
@@ -30,7 +30,10 @@ class CoursesPage extends React.Component<ICoursesPage> {
     }
 
     public componentDidMount() {
-        this.props.actions.loadCourses();
+        let a = this.props.loadCourses().subscribe(x =>{
+            let a = x;
+        });
+        a.unsubscribe();
     }
 
     public onTitleChange(event) {
@@ -40,7 +43,7 @@ class CoursesPage extends React.Component<ICoursesPage> {
     }
 
     public onClickSave() {
-        this.props.actions.createCourseSuccess(this.state.course);
+        //this.props.actions.createCourseSuccess(this.state.course);
     }
 
     public courseRow(course, index) {
@@ -72,7 +75,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispachToProps = dispatch => {
     return {
-        actions: bindActionCreators(courseActions, dispatch)
+        loadCourses: () => courseActions.loadCourses(dispatch)
     };
 };
 
