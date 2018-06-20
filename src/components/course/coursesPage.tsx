@@ -1,67 +1,62 @@
 // React
 import * as React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 // Utils
 import * as courseActions from "../../actions/courseActions";
 
 // Components
-import CourseList from './courseList';
+import CourseList from "./courseList";
 
-interface ICoursesPage {
-    loadCourses: any;
-    courses: Array<any>;
-}
+// RxJs
+import { Subscription } from "rxjs";
 
-class CoursesPage extends React.Component<ICoursesPage> {
-    public state = {
-        course: {
-            title: ""
-        }
-    };
+// Models
+import { ICoursesPageProps, ICoursesPageState } from "../../models/models.d";
 
+class CoursesPage extends React.Component<ICoursesPageProps, ICoursesPageState> {
+    private _subscription: Subscription;
+    
     constructor(props, context) {
         super(props, context);
-        const self = this;
-
-        self.onTitleChange = self.onTitleChange.bind(self);
-        self.onClickSave = self.onClickSave.bind(self);
     }
 
     public componentDidMount() {
-        let a = this.props.loadCourses().subscribe(x =>{
+        const self = this;
+        
+        self.unsubscribe();
+
+        self._subscription = self.props.loadCourses().subscribe(x => {
             let a = x;
         });
-        a.unsubscribe();
-    }
-
-    public onTitleChange(event) {
-        const course = this.state.course;
-        course.title = event.target.value;
-        this.setState({ course: course });
-    }
-
-    public onClickSave() {
-        //this.props.actions.createCourseSuccess(this.state.course);
     }
 
     public courseRow(course, index) {
         return <div key={index}>{course.title}</div>;
     }
 
-    render() {
+    public componentWillUnmount() {
         const self = this;
+
+        self.unsubscribe();
+    }
+
+    private unsubscribe() {
+        const self = this;
+
+        if (self._subscription) {
+            self._subscription.unsubscribe();
+            self._subscription = null;
+        }
+    }
+
+    render() {
         const { courses } = this.props;
 
         return (
             <div>
                 <h1>Courses</h1>
                 <CourseList courses={courses} />
-                <h2>Add Course</h2>
-                <input type="text" value={self.state.course.title} onChange={self.onTitleChange} />
-
-                <input type="submit" value="Save" className="btn btn-primary" onClick={self.onClickSave} />
             </div>
         );
     }

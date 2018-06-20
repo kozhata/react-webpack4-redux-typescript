@@ -1,4 +1,4 @@
-// React
+// Redux
 import { combineReducers } from "redux";
 
 // Utils

@@ -1,4 +1,7 @@
+// Actions
 import * as types from "../actions/actionTypes";
+
+// Utils
 import initialState from "./initialState";
 
 const authorReducer = (state = initialState.authors, action) => {

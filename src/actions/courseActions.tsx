@@ -1,7 +1,11 @@
+// Actions
 import * as types from "./actionTypes";
+
+// Services
 import courseApi from "../api/mockCourseApi";
-import { Subscription, Observable } from "rxjs";
-import { finalize } from "rxjs/operators";
+
+// RxJs
+import { Observable, Subscription, Subscriber } from "rxjs";
 // import { beginAjaxCall, ajaxCallError } from "./ajaxStatusActions";
 
 const createCourseSuccess = course => {
@@ -16,10 +20,9 @@ const loadCoursesSuccess = courses => {
     return { type: types.LOAD_COURSES_SUCCESS, courses };
 };
 
-const loadCourses = (dispatch) => {
-    return Observable.create((subscriber) => {
-
-        let createConsultantSubscription = courseApi.getAllCourses().subscribe(
+const loadCourses = dispatch => {
+    return Observable.create((subscriber: Subscriber<any>) => {
+        const createConsultantSubscription: Subscription = courseApi.getAllCourses().subscribe(
             courses => {
                 dispatch(loadCoursesSuccess(courses));
                 subscriber.next(courses);
@@ -33,22 +36,8 @@ const loadCourses = (dispatch) => {
             if (createConsultantSubscription) {
                 createConsultantSubscription.unsubscribe();
             }
-        }
+        };
     });
-    
-    
-    
-    
-    // return (dispatch): Subscription => {
-    //     return courseApi.getAllCourses().subscribe(
-    //         courses => {
-    //             dispatch(loadCoursesSuccess(courses));
-    //         },
-    //         error => {
-    //             throw error;
-    //         }
-    //     );
-    // };
 };
 
 const saveCourse = course => {
@@ -64,4 +53,4 @@ const saveCourse = course => {
     };
 };
 
-export { createCourseSuccess, loadCourses, saveCourse };
+export { loadCourses, saveCourse };

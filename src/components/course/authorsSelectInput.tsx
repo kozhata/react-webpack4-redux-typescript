@@ -1,7 +1,6 @@
 // React
 import * as React from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 
 // Utils
 import * as authorActions from "../../actions/authorActions";
@@ -9,13 +8,32 @@ import * as authorActions from "../../actions/authorActions";
 // Components
 import SelectInput from "../common/selectInput";
 
+// RxJs
+import { Subscription } from "rxjs";
+
+// Models
+import { IManageCoursePageProps } from "../../models/models.d";
+
 export class AuthorsSelectInput extends React.Component<IManageCoursePageProps> {
+    private _subscription: Subscription;
+
     constructor(props, context) {
         super(props, context);
     }
 
     public componentDidMount() {
-        this.props.actions.loadAuthors();
+        const self = this;
+
+        self._subscription = self.props.loadAuthors().subscribe();
+    }
+
+    public componentWillUnmount() {
+        const self = this;
+
+        if (self._subscription) {
+            self._subscription.unsubscribe();
+            self._subscription = null;
+        }
     }
 
     render() {
@@ -37,14 +55,6 @@ export class AuthorsSelectInput extends React.Component<IManageCoursePageProps> 
     }
 }
 
-interface IManageCoursePageProps {
-    authors: any;
-    actions: any;
-    value: any;
-    onChange: any;
-    error: any;
-}
-
 const mapStateToProps = (state, ownProps) => {
     return {
         authors: state.authors.map(x => {
@@ -60,7 +70,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        actions: bindActionCreators(authorActions, dispatch)
+        loadAuthors: () => authorActions.loadAuthors(dispatch)
     };
 };
 

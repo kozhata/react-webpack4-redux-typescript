@@ -1,4 +1,8 @@
+// React
 import * as React from "react";
+
+// Models
+import { ISelectInput } from "../../models/models.d";
 
 const SelectInput = ({ name, label, onChange, defaultOption, value, error, options }: ISelectInput) => {
     return (
@@ -21,15 +25,5 @@ const SelectInput = ({ name, label, onChange, defaultOption, value, error, optio
         </div>
     );
 };
-
-interface ISelectInput {
-    name: string;
-    label: string;
-    onChange: () => {};
-    defaultOption?: string;
-    value?: string;
-    error?: string;
-    options?: Array<any>;
-}
 
 export default SelectInput;

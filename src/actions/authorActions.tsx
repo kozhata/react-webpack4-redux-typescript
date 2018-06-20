@@ -1,13 +1,19 @@
+// Services
 import AuthorApi from "../api/mockAuthorApi";
+
+// Actions
 import * as types from "./actionTypes";
+
+// RxJs
+import { Observable } from "rxjs";
 
 const loadAuthorsSuccess = authors => {
     return { type: types.LOAD_AUTHORS_SUCCESS, authors };
 };
 
-const loadAuthors = () => {
-    return dispatch => {
-        return AuthorApi.getAllAuthors().subscribe(
+const loadAuthors = (dispatch): Observable<void> => {
+    return Observable.create(() => {
+        const createConsultantSubscription = AuthorApi.getAllAuthors().subscribe(
             authors => {
                 dispatch(loadAuthorsSuccess(authors));
             },
@@ -15,7 +21,13 @@ const loadAuthors = () => {
                 throw error;
             }
         );
-    };
+
+        return () => {
+            if (createConsultantSubscription) {
+                createConsultantSubscription.unsubscribe();
+            }
+        };
+    });
 };
 
 export { loadAuthors };

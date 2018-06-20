@@ -5,35 +5,22 @@ import * as React from "react";
 import TextInput from "../common/TextInput";
 import AuthorsSelectInput from "./authorsSelectInput";
 
-const CourseForm = (props: ICourseForm) => {
+// Models
+import { ICourseForm } from "../../models/models.d";
+
+const CourseForm = ({ course, onSave, onChange, saving }: ICourseForm) => {
     let errors: any = {};
-    let { course, onSave, onChange, saving } = props;
 
     const onChangeLocal = event => {
         onChange(event);
-    }
+    };
 
-    const courseFormIsValid = () => {
-        let formIsValid = true;        
-
-        if (this.state.course.title.length < 5) {
-            errors['title'] = "Title must be at least 5 characters.";
-            formIsValid = false;
-        }
-
-        return formIsValid;
-    }
-    
     return (
         <form>
             <h1>Manage Course</h1>
             <TextInput name="title" label="Title" value={course.title} onChange={onChangeLocal} error={errors.title} />
 
-            <AuthorsSelectInput
-                value={course.authorId}
-                onChange={onChangeLocal}
-                error={errors.authorId}
-            />
+            <AuthorsSelectInput value={course.authorId} onChange={onChangeLocal} error={errors.authorId} />
 
             <TextInput
                 name="category"
@@ -43,7 +30,13 @@ const CourseForm = (props: ICourseForm) => {
                 error={errors.category}
             />
 
-            <TextInput name="length" label="Length" value={course.length} onChange={onChangeLocal} error={errors.length} />
+            <TextInput
+                name="length"
+                label="Length"
+                value={course.length}
+                onChange={onChangeLocal}
+                error={errors.length}
+            />
 
             <input
                 type="submit"
@@ -55,12 +48,5 @@ const CourseForm = (props: ICourseForm) => {
         </form>
     );
 };
-
-interface ICourseForm {
-    course?: any;
-    onSave?: any;
-    onChange?: any;
-    saving?: any;
-}
 
 export default CourseForm;
