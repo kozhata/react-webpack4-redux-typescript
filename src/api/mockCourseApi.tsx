@@ -1,6 +1,7 @@
 import delay from "./delay";
 
-import { of, Observable, throwError } from "rxjs";
+// RxJs
+import { of, Observable, throwError, Subscriber } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 
 // This file mocks a web API by working with the hard-coded data below.
@@ -72,7 +73,7 @@ class CourseApi {
     }
 
     static saveCourse(course): Observable<any>  {
-        return of(() => {
+        return Observable.create((subscriber: Subscriber<any>) => {
             course = Object.assign({}, course);
             const minCourseTitleLength = 1;
             if (course.title.length < minCourseTitleLength) {
@@ -90,7 +91,8 @@ class CourseApi {
                 course.watchHref = `http://www.pluralsight.com/courses/${course.id}`;
                 courses.push(course);
             }
-            return course;
+
+            subscriber.next(course);
         });
     }
 

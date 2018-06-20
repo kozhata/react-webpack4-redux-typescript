@@ -40,8 +40,8 @@ const CourseForm = ({ course, onSave, onChange, saving }: ICourseForm) => {
 
             <input
                 type="submit"
-                //disabled={saving}
-                //value={saving ? "Saving..." : "Save"}
+                disabled={saving}
+                value={saving ? "Saving..." : "Save"}
                 className="btn btn-primary"
                 onClick={onSave}
             />

@@ -1,10 +1,14 @@
+// React
 import * as React from "react";
+
+// Models
+import { ITextInput } from "../../models/models.d";
 
 const TextInput = (props: ITextInput) => {
     const { name, label, onChange, placeholder, value, error } = props;
 
     let wrapperClass = "form-group";
-    
+
     if (error && error.length > 0) {
         wrapperClass += " " + "has-error";
     }
@@ -26,14 +30,5 @@ const TextInput = (props: ITextInput) => {
         </div>
     );
 };
-
-interface ITextInput {
-    name: string;
-    label: string;
-    onChange: (event) => void;
-    placeholder?: string;
-    value?: string;
-    error?: string;
-}
 
 export default TextInput;

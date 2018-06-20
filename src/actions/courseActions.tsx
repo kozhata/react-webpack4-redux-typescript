@@ -6,7 +6,11 @@ import courseApi from "../api/mockCourseApi";
 
 // RxJs
 import { Observable, Subscription, Subscriber } from "rxjs";
+import { finalize } from "rxjs/operators";
 // import { beginAjaxCall, ajaxCallError } from "./ajaxStatusActions";
+
+// Models
+import { ICourse } from "../models/models.d";
 
 const createCourseSuccess = course => {
     return { type: types.CREATE_COURSE_SUCCESS, course };
@@ -40,17 +44,31 @@ const loadCourses = dispatch => {
     });
 };
 
-const saveCourse = course => {
-    return function(dispatch, getState) {
-        return courseApi.saveCourse(course).subscribe(
-            course => {
-                course.id ? dispatch(updateCourseSuccess(course)) : dispatch(createCourseSuccess(course));
-            },
-            error => {
-                throw error;
+const saveCourse = (course: ICourse, dispatch) => {
+    return Observable.create((subscriber: Subscriber<any>) => {
+        const createConsultantSubscription: Subscription = courseApi
+            .saveCourse(course)
+            .pipe(
+                finalize(() => {
+                    subscriber.complete();
+                })
+            )
+            .subscribe(
+                (c: ICourse) => {
+                    c.id ? dispatch(updateCourseSuccess(c)) : dispatch(createCourseSuccess(c));
+                    subscriber.next();
+                },
+                error => {
+                    throw error;
+                }
+            );
+
+        return () => {
+            if (createConsultantSubscription) {
+                createConsultantSubscription.unsubscribe();
             }
-        );
-    };
+        };
+    });
 };
 
 export { loadCourses, saveCourse };

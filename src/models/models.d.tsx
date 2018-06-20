@@ -11,6 +11,7 @@ export interface ICoursesPageState {
 }
 
 export interface ICourse {
+    id: string;
     title: string;
     authorId: string;
     category: string;
@@ -32,9 +33,7 @@ export interface IManageCoursePageProps {
     error: any;
 }
 
-export interface IAuthor {
-
-}
+export interface IAuthor {}
 
 export interface ISelectInput {
     name: string;
@@ -44,4 +43,23 @@ export interface ISelectInput {
     value?: string;
     error?: string;
     options?: Array<any>;
+}
+export interface ITextInput {
+    name: string;
+    label: string;
+    onChange: (event) => void;
+    placeholder?: string;
+    value?: string;
+    error?: string;
+}
+
+export interface IManageCoursePageState {
+    course: ICourse;
+    errors: any;
+    saving: boolean;
+}
+
+export interface IManageCoursePageProps {
+    course: ICourse;
+    saveCourse: (course: ICourse) => Observable<ICourse>;
 }
