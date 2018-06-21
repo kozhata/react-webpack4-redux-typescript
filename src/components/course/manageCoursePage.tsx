@@ -31,12 +31,12 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
         self.saveCourse = self.saveCourse.bind(self);
     }
 
-    // componentWillReceiveProps(nextProps) {
-    //     if (this.props.course.id != nextProps.course.id) {
-    //         // Necessary to populate form when existing course is loaded directly.
-    //         this.setState({ course: Object.assign({}, nextProps.course) });
-    //     }
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.course.id != nextProps.course.id) {
+            // Necessary to populate form when existing course is loaded directly.
+            this.setState({ course: Object.assign({}, nextProps.course) });
+        }
+    }
 
     updateCourseState(event) {
         const self = this;
@@ -75,12 +75,13 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
                 self.setState({ saving: false });
             }
         );
-    };
+    }
 
     private redirect() {
         const self = this;
 
-        self.setState({ saving: false });
+        self.setState({ saving: false });        
+        self.context.router.history.push('/courses');
     }
 
     render() {
@@ -95,20 +96,26 @@ export class ManageCoursePage extends React.Component<IManageCoursePageProps, IM
             />
         );
     }
+
+    static contextTypes = {
+        router: () => null
+    };
 }
 
 const getCourseById = (courses, id) => {
     const course = courses.filter(course => course.id == id);
-    if (course) return course[0]; //since filter returns an array, have to grab the first.
+    if (course.length) return course[0]; //since filter returns an array, have to grab the first.
     return null;
 };
 
 const mapStateToProps = (state, ownProps) => {
+    const { match: { params } } = ownProps;
+
     let course = { id: "", watchHref: "", title: "", authorId: "", length: "", category: "" };
 
-    // if (ownProps.params.id && state.courses.length > 0) {
-    //     course = getCourseById(state.courses, ownProps.params.id);
-    // }
+    if (params.id && state.courses.length) {
+        course = getCourseById(state.courses, params.id);
+    }
 
     return {
         course: course

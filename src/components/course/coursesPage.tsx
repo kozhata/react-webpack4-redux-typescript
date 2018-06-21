@@ -19,6 +19,9 @@ class CoursesPage extends React.Component<ICoursesPageProps, ICoursesPageState> 
     
     constructor(props, context) {
         super(props, context);
+        const self = this;
+
+        self.redirectToAddCourse = self.redirectToAddCourse.bind(self);
     }
 
     public componentDidMount() {
@@ -41,6 +44,12 @@ class CoursesPage extends React.Component<ICoursesPageProps, ICoursesPageState> 
         self.unsubscribe();
     }
 
+    public redirectToAddCourse() {
+        const self = this;
+        
+        self.context.router.history.push('/course');
+    }
+
     private unsubscribe() {
         const self = this;
 
@@ -51,15 +60,22 @@ class CoursesPage extends React.Component<ICoursesPageProps, ICoursesPageState> 
     }
 
     render() {
-        const { courses } = this.props;
+        const self = this;
+
+        const { courses } = self.props;
 
         return (
             <div>
                 <h1>Courses</h1>
+                <input type="submit" value="Add course" className="btn btn-primary" onClick={self.redirectToAddCourse} />
                 <CourseList courses={courses} />
             </div>
         );
     }
+
+    static contextTypes = {
+        router: () => null
+    };
 }
 
 const mapStateToProps = (state, ownProps) => {
